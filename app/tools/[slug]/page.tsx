@@ -17,8 +17,9 @@ const toolComponents: Record<string, React.ComponentType> = {
   'image-converter':    dynamic(() => import('@/components/tools/ImageConverter')),
 };
 
+// Next.js 15+: params is now a Promise
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -26,7 +27,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tool = getToolBySlug(params.slug);
+  const { slug } = await params;
+  const tool = getToolBySlug(slug);
   if (!tool) return { title: '工具未找到' };
   return {
     title: `${tool.name} – 免费在线工具 | MyTools`,
@@ -40,7 +42,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Placeholder component map — real implementations go here later
 function ToolPlaceholder({ tool }: { tool: ReturnType<typeof getToolBySlug> }) {
   if (!tool) return null;
   return (
@@ -52,8 +53,9 @@ function ToolPlaceholder({ tool }: { tool: ReturnType<typeof getToolBySlug> }) {
   );
 }
 
-export default function ToolPage({ params }: Props) {
-  const tool = getToolBySlug(params.slug);
+export default async function ToolPage({ params }: Props) {
+  const { slug } = await params;
+  const tool = getToolBySlug(slug);
   if (!tool) notFound();
 
   return (
