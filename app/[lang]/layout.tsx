@@ -26,6 +26,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       template: `%s | MyTools`,
     },
     description: dict.home.subtitle,
+    other: {
+      "google-adsense-account": "ca-pub-6958229347848986",
+    },
   };
 }
 
