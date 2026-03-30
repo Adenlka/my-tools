@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "../globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -34,6 +35,12 @@ export default async function LangLayout({ children, params }: Props) {
 
   return (
     <html lang={validLang}>
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6958229347848986"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
       <body className={`${inter.className} bg-gray-50 text-gray-900 min-h-screen flex flex-col`}>
         <Navbar lang={validLang} />
         <div className="flex-1">{children}</div>
