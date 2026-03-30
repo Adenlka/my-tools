@@ -1,7 +1,14 @@
 import Link from 'next/link';
+import { getDict } from '@/lib/i18n';
 
-export default function Footer() {
+interface Props {
+  lang: string;
+}
+
+export default function Footer({ lang }: Props) {
+  const dict = getDict(lang);
   const year = new Date().getFullYear();
+
   return (
     <footer className="bg-gray-50 border-t border-gray-200 mt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -10,25 +17,23 @@ export default function Footer() {
             <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
               <span>🛠️</span> MyTools
             </h3>
-            <p className="text-sm text-gray-500">
-              免费在线工具集合，无需注册，随时使用，保护您的隐私。
-            </p>
+            <p className="text-sm text-gray-500">{dict.footer.tagline}</p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-700 mb-3">快速导航</h3>
+            <h3 className="font-semibold text-gray-700 mb-3">{dict.footer.quickNav}</h3>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li><Link href="/" className="hover:text-indigo-600 transition-colors">首页</Link></li>
-              <li><Link href="/about" className="hover:text-indigo-600 transition-colors">关于我们</Link></li>
-              <li><Link href="/privacy" className="hover:text-indigo-600 transition-colors">隐私政策</Link></li>
+              <li><Link href={`/${lang}`} className="hover:text-indigo-600 transition-colors">{dict.footer.home}</Link></li>
+              <li><Link href={`/${lang}/about`} className="hover:text-indigo-600 transition-colors">{dict.footer.about}</Link></li>
+              <li><Link href={`/${lang}/privacy`} className="hover:text-indigo-600 transition-colors">{dict.footer.privacy}</Link></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-700 mb-3">工具分类</h3>
+            <h3 className="font-semibold text-gray-700 mb-3">{dict.footer.categories}</h3>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li>📷 图片处理</li>
-              <li>📝 文字处理</li>
-              <li>🏠 生活实用</li>
-              <li>🎬 媒体工具</li>
+              <li>🖼️ {dict.home.categories.image}</li>
+              <li>📝 {dict.home.categories.text}</li>
+              <li>🏠 {dict.home.categories.life}</li>
+              <li>🎬 {dict.home.categories.media}</li>
             </ul>
           </div>
         </div>
