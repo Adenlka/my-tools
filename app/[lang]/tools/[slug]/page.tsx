@@ -18,6 +18,18 @@ const toolComponents: Record<string, React.ComponentType> = {
   "image-compressor":   dynamic(() => import("@/components/tools/ImageCompressor")),
   "youtube-thumbnail":  dynamic(() => import("@/components/tools/YoutubeThumbnail")),
   "image-converter":    dynamic(() => import("@/components/tools/ImageConverter")),
+  "pdf-merger":         dynamic(() => import("@/components/tools/PdfMerger")),
+  "pdf-splitter":       dynamic(() => import("@/components/tools/PdfSplitter")),
+  "image-to-pdf":       dynamic(() => import("@/components/tools/ImageToPdf")),
+  "markdown-to-html":   dynamic(() => import("@/components/tools/MarkdownToHtml")),
+  "json-formatter":     dynamic(() => import("@/components/tools/JsonFormatter")),
+  "base64-encoder":     dynamic(() => import("@/components/tools/Base64Encoder")),
+  "hash-generator":     dynamic(() => import("@/components/tools/HashGenerator")),
+  "color-picker":       dynamic(() => import("@/components/tools/ColorPicker")),
+  "loan-calculator":    dynamic(() => import("@/components/tools/LoanCalculator")),
+  "random-number":      dynamic(() => import("@/components/tools/RandomNumber")),
+  "text-cleaner":       dynamic(() => import("@/components/tools/TextCleaner")),
+  "countdown-timer":    dynamic(() => import("@/components/tools/CountdownTimer")),
 };
 
 interface Props {
@@ -26,7 +38,7 @@ interface Props {
 
 export async function generateStaticParams() {
   const params: { lang: string; slug: string }[] = [];
-  for (const lang of ["en", "zh"]) {
+  for (const lang of ["en", "zh", "ja"]) {
     for (const tool of tools) {
       params.push({ lang, slug: tool.slug });
     }
@@ -38,18 +50,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
   const tool = getToolBySlug(slug);
   if (!tool) return { title: "Tool Not Found" };
-  const l = (lang === "zh" ? "zh" : "en") as "en" | "zh";
+  const l = (lang === "zh" ? "zh" : lang === "ja" ? "ja" : "en") as "en" | "zh" | "ja";
   const enUrl = `${SITE_URL}/en/tools/${slug}`;
   const zhUrl = `${SITE_URL}/zh/tools/${slug}`;
+  const jaUrl = `${SITE_URL}/ja/tools/${slug}`;
   return {
     title: tool.name[l],
     description: tool.description[l],
     keywords: tool.keywords[l],
     alternates: {
-      canonical: l === "en" ? enUrl : zhUrl,
+      canonical: l === "zh" ? zhUrl : l === "ja" ? jaUrl : enUrl,
       languages: {
         en: enUrl,
         zh: zhUrl,
+        ja: jaUrl,
         "x-default": enUrl,
       },
     },
@@ -73,7 +87,7 @@ export default async function ToolPage({ params }: Props) {
   const { lang, slug } = await params;
   const tool = getToolBySlug(slug);
   if (!tool) notFound();
-  const l = (lang === "zh" ? "zh" : "en") as "en" | "zh";
+  const l = (lang === "zh" ? "zh" : lang === "ja" ? "ja" : "en") as "en" | "zh" | "ja";
   const dict = getDict(lang);
 
   return (

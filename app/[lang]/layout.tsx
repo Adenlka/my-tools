@@ -14,7 +14,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return [{ lang: "en" }, { lang: "zh" }];
+  return [{ lang: "en" }, { lang: "zh" }, { lang: "ja" }];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 export default async function LangLayout({ children, params }: Props) {
   const { lang } = await params;
-  const validLang = lang === "zh" ? "zh" : "en";
+  const validLang = lang === "zh" ? "zh" : lang === "ja" ? "ja" : "en";
 
   return (
     <html lang={validLang}>

@@ -12,14 +12,14 @@ export default function LangSwitcher({ currentLang }: Props) {
 
   const switchLang = (newLang: string) => {
     if (newLang === currentLang) return;
-    // Replace /en/ or /zh/ prefix with the new language
-    const newPath = pathname.replace(/^\/(en|zh)/, `/${newLang}`);
+    // Replace /en/, /zh/, or /ja/ prefix with the new language
+    const newPath = pathname.replace(/^\/(en|zh|ja)/, `/${newLang}`);
     router.push(newPath);
   };
 
   return (
     <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
-      {(['en', 'zh'] as const).map((lang) => (
+      {(['en', 'zh', 'ja'] as const).map((lang) => (
         <button
           key={lang}
           onClick={() => switchLang(lang)}
@@ -29,7 +29,7 @@ export default function LangSwitcher({ currentLang }: Props) {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          {lang === 'en' ? 'EN' : '中文'}
+          {lang === 'en' ? 'EN' : lang === 'zh' ? '中文' : '日本語'}
         </button>
       ))}
     </div>

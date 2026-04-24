@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 const BASE_URL = "https://alka003.xyz";
-const LOCALES = ["en", "zh"];
+const LOCALES = ["en", "zh", "ja"];
 
 const toolSlugs = [
   "qr-code-generator",
@@ -14,6 +14,18 @@ const toolSlugs = [
   "bmi-calculator",
   "age-calculator",
   "youtube-thumbnail",
+  "pdf-merger",
+  "pdf-splitter",
+  "image-to-pdf",
+  "markdown-to-html",
+  "json-formatter",
+  "base64-encoder",
+  "hash-generator",
+  "color-picker",
+  "loan-calculator",
+  "random-number",
+  "text-cleaner",
+  "countdown-timer",
 ];
 
 const staticPages = ["", "/about", "/privacy"];

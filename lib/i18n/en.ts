@@ -19,6 +19,8 @@ export const en = {
       text: "Text Tools",
       life: "Life & Utilities",
       media: "Media Tools",
+      file: "File Tools",
+      design: "Design Tools",
     },
   },
   tool: {

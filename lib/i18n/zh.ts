@@ -21,6 +21,8 @@ export const zh: I18nDict = {
       text: "文字处理",
       life: "生活实用",
       media: "媒体工具",
+      file: "文件处理",
+      design: "设计工具",
     },
   },
   tool: {

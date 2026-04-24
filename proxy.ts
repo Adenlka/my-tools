@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const LOCALES = ["en", "zh"];
+const LOCALES = ["en", "zh", "ja"];
 const DEFAULT_LOCALE = "en";
 
 export function proxy(request: NextRequest) {
@@ -13,7 +13,7 @@ export function proxy(request: NextRequest) {
 
   const acceptLang = request.headers.get("accept-language") || "";
   const preferred = acceptLang.split(",")[0].trim().toLowerCase();
-  const locale = preferred.startsWith("zh") ? "zh" : DEFAULT_LOCALE;
+  const locale = preferred.startsWith("zh") ? "zh" : preferred.startsWith("ja") ? "ja" : DEFAULT_LOCALE;
 
   return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
 }

@@ -27,6 +27,8 @@ const categoryIcons: Record<string, string> = {
   text: "📝",
   life: "🏠",
   media: "🎬",
+  file: "📄",
+  design: "🎨",
 };
 
 export default async function HomePage({ params }: Props) {
@@ -64,10 +66,10 @@ export default async function HomePage({ params }: Props) {
                     <span className="text-4xl">{tool.icon}</span>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-1">
-                        {tool.name[lang as "en" | "zh"] ?? tool.name.en}
+                        {tool.name[lang as "en" | "zh" | "ja"] ?? tool.name.en}
                       </h3>
                       <p className="text-sm text-gray-500 line-clamp-2">
-                        {tool.description[lang as "en" | "zh"] ?? tool.description.en}
+                        {tool.description[lang as "en" | "zh" | "ja"] ?? tool.description.en}
                       </p>
                     </div>
                   </div>
