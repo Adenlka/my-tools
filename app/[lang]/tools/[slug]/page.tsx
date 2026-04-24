@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getToolBySlug, tools } from "@/lib/tools";
 import { getDict } from "@/lib/i18n";
+import { toolContent } from "@/lib/tool-content";
 import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -51,15 +52,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tool = getToolBySlug(slug);
   if (!tool) return { title: "Tool Not Found" };
   const l = (lang === "zh" ? "zh" : lang === "ja" ? "ja" : "en") as "en" | "zh" | "ja";
-  const enUrl = `${SITE_URL}/en/tools/${slug}`;
-  const zhUrl = `${SITE_URL}/zh/tools/${slug}`;
-  const jaUrl = `${SITE_URL}/ja/tools/${slug}`;
+  const enUrl  = `${SITE_URL}/en/tools/${slug}`;
+  const zhUrl  = `${SITE_URL}/zh/tools/${slug}`;
+  const jaUrl  = `${SITE_URL}/ja/tools/${slug}`;
+  const canonical = `${SITE_URL}/${l}/tools/${slug}`;
+  const ogLocale = l === "zh" ? "zh_CN" : l === "ja" ? "ja_JP" : "en_US";
+
   return {
-    title: tool.name[l],
+    title: `${tool.name[l]} - Free Online Tool`,
     description: tool.description[l],
-    keywords: tool.keywords[l],
+    keywords: tool.keywords[l].join(", "),
     alternates: {
-      canonical: l === "zh" ? zhUrl : l === "ja" ? jaUrl : enUrl,
+      canonical,
       languages: {
         en: enUrl,
         zh: zhUrl,
@@ -68,8 +72,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
-      title: tool.name[l],
+      title: `${tool.name[l]} - Free Online Tool`,
       description: tool.description[l],
+      url: canonical,
+      siteName: "MyTools",
+      locale: ogLocale,
       type: "website",
     },
   };
@@ -89,9 +96,31 @@ export default async function ToolPage({ params }: Props) {
   if (!tool) notFound();
   const l = (lang === "zh" ? "zh" : lang === "ja" ? "ja" : "en") as "en" | "zh" | "ja";
   const dict = getDict(lang);
+  const content = toolContent[slug] ?? null;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": tool.name[l],
+    "description": tool.description[l],
+    "url": `${SITE_URL}/${l}/tools/${slug}`,
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+    },
+  };
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8">
         <Link href={`/${lang}`} className="hover:text-indigo-600 transition-colors">
@@ -132,6 +161,49 @@ export default async function ToolPage({ params }: Props) {
           ))}
         </div>
       </section>
+
+      {/* How to Use + FAQ (SEO content) */}
+      {content && (
+        <section className="mt-10 space-y-8">
+          {/* How to Use */}
+          <div className="bg-gray-50 rounded-2xl p-6 sm:p-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-3">
+              How to Use {tool.name.en}
+            </h2>
+            <p className="text-gray-600 text-sm leading-relaxed mb-5">
+              {content.howTo.intro}
+            </p>
+            <ol className="space-y-3">
+              {content.howTo.steps.map((step, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">{step.title}</p>
+                    <p className="text-sm text-gray-500">{step.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* FAQ */}
+          <div className="bg-gray-50 rounded-2xl p-6 sm:p-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-5">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4">
+              {content.faqs.map((faq, i) => (
+                <div key={i} className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
+                  <h3 className="text-sm font-semibold text-gray-800 mb-1">{faq.question}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

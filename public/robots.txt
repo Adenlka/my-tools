@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alka003.xyz/sitemap.xml

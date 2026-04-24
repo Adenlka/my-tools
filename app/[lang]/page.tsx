@@ -7,17 +7,45 @@ interface Props {
   params: Promise<{ lang: string }>;
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alka003.xyz";
+
+const TITLES: Record<string, string> = {
+  en: "Free Online Tools - QR Code, PDF, Image, Text Tools | MyTools",
+  zh: "免费在线工具 - 二维码、PDF、图片、文字工具 | MyTools",
+  ja: "無料オンラインツール - QRコード、PDF、画像、テキストツール | MyTools",
+};
+
+const DESCRIPTIONS: Record<string, string> = {
+  en: `${tools.length} free online tools: QR code generator, PDF merger, image compressor, word counter, BMI calculator and more. No sign-up required.`,
+  zh: `${tools.length}个免费在线工具：二维码生成器、PDF合并、图片压缩、字数统计、BMI计算器等。无需注册。`,
+  ja: `${tools.length}種類の無料オンラインツール：QRコード生成、PDF結合、画像圧縮、文字数カウント、BMI計算など。登録不要。`,
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
-  const dict = getDict(lang);
+  const l = lang === "zh" ? "zh" : lang === "ja" ? "ja" : "en";
+  const ogLocale = l === "zh" ? "zh_CN" : l === "ja" ? "ja_JP" : "en_US";
+  const canonical = `${SITE_URL}/${l}`;
+
   return {
-    title: `MyTools – ${dict.home.title}`,
-    description: dict.home.subtitle,
+    title: TITLES[l] ?? TITLES.en,
+    description: DESCRIPTIONS[l] ?? DESCRIPTIONS.en,
     alternates: {
+      canonical,
       languages: {
-        en: "/en",
-        zh: "/zh",
+        en: `${SITE_URL}/en`,
+        zh: `${SITE_URL}/zh`,
+        ja: `${SITE_URL}/ja`,
+        "x-default": `${SITE_URL}/en`,
       },
+    },
+    openGraph: {
+      title: TITLES[l] ?? TITLES.en,
+      description: DESCRIPTIONS[l] ?? DESCRIPTIONS.en,
+      url: canonical,
+      siteName: "MyTools",
+      locale: ogLocale,
+      type: "website",
     },
   };
 }

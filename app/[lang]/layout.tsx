@@ -8,6 +8,8 @@ import { getDict } from "@/lib/i18n";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alka003.xyz";
+
 interface Props {
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
@@ -21,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const dict = getDict(lang);
   return {
+    metadataBase: new URL(SITE_URL),
     title: {
       default: `MyTools – ${dict.home.title}`,
       template: `%s | MyTools`,
@@ -28,6 +31,25 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     description: dict.home.subtitle,
     other: {
       "google-adsense-account": "ca-pub-6958229347848986",
+    },
+    openGraph: {
+      siteName: "MyTools",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@mytools",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
     },
   };
 }
