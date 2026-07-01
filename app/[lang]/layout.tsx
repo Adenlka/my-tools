@@ -5,6 +5,7 @@ import "../globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getDict } from "@/lib/i18n";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -70,6 +71,7 @@ export default async function LangLayout({ children, params }: Props) {
         <Navbar lang={validLang} />
         <div className="flex-1">{children}</div>
         <Footer lang={validLang} />
+        <Analytics />
       </body>
     </html>
   );
